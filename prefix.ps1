@@ -21,7 +21,7 @@ Get-ChildItem -File | ForEach-Object {
 		# Check if the file name already starts with the prefix
 		if (-not $_.Name.StartsWith($prefix)) {
 			# Construct the new file name with the prefix
-			$newName = "$prefix-$_"
+			$newName = "$prefix $_"
 			$oldName = "$_"
 
 			# Rename the file with the new name
