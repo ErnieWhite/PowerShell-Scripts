@@ -2,7 +2,7 @@
 # 
 # This script checks if a directory exists. If it does not, the script creates it.
 # Then, it navigates into the created directory.
-# If no directory nam eis provided as an argument, it displays usage instructions.
+# If no directory name is provided as an argument, it displays usage instructions.
 #
 # Created by ChatGPT
 
