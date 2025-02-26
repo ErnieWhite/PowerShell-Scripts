@@ -1,27 +1,37 @@
-# PowerShell Script to add a prefix to files in the current directory
-# If no prefix is provided, the script uses teh current directory name as the prefix.
-# The script ensures that files do not receive the prefix if they already have it.
-#
-# Created by ChatGPT
+# PowerShell script to add a prefix to files in the current directory
+# Enhanced for fault tolerance and logging
 
 param (
-	[string]$prefix  # Optional parameter fro the prefix; if not provided, the directory name is used.
-) 
+	[string]$prefix # Optional parameter for the prefix; if not provided, the current directory name is used
+)
 
 # If no prefix is provided, use the name of the current directory
 if (-not $prefix) {
-	$prefix = (Get-Item -Path ".").Name
+	try {
+		$prefix = (Get-Item -Path ".").Name
+	} catch {
+		Write-Host "Error: Unable to determine the directory name." -ForgroundColor Red
+		exit 1
+	}
 }
 
 # Get all files in the current directory and iterate through them
 Get-ChildItem -File | ForEach-Object {
-	# Check if the file name lready starts with the prefix
-	if (-not $_.Name.StartsWith($prefix)) {
-		# Construct the new file name with the prefix
-		$newName = "$preprefix$($_.Name)"
+	try {
+		# Check if the file name already starts with the prefix
+		if (-not $_.Name.StartsWith($prefix)) {
+			# Construct the new file name with the prefix
+			$newName = "$prefix-$_"
+			$oldName = "$_"
 
-		# Rename the file with the new name
-		Rename-Item -Path $_.FullName -NewName $ newName
+			# Rename the file with the new name
+			Rename-Item -Path $_.FullName -NewName $newName -ErrorAction Stop
+			Write-Host "Renamed: $_.Name -> $newName" -ForegroundColor Green
+		} else {
+			Write-Host "Skipped (already prefixed): $_" -ForegroundColor Yellow
+		}
+	} catch {
+		Write-Host "Error renaming: $oldName $_" -ForegroundColor Red
 	}
 }
 
