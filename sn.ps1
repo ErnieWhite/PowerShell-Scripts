@@ -19,7 +19,7 @@ if ($args.Count -eq 0) {
 }
 
 # Get the subdirectory name from the first argument.
-$SubDirectory = $args[0]
+$SubDirectory = $args[0].ToUpper()
 
 # Combine the base directory and subdirectory name to form the full path.
 $NewDirectory = Join-Path -Path $BaseDirectory -ChildPath $SubDirectory
